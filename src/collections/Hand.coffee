@@ -2,9 +2,11 @@ class window.Hand extends Backbone.Collection
   model: Card
 
   initialize: (array, @deck, @isDealer) ->
+    @logic()
 
   hit: ->
     @add(@deck.pop())
+    @logic()
 
   hasAce: -> @reduce (memo, card) ->
     memo or card.get('value') is 1
@@ -20,4 +22,30 @@ class window.Hand extends Backbone.Collection
     # when there is an ace, it offers you two scores - the original score, and score + 10.
     [@minScore(), @minScore() + 10 * @hasAce()]
 
+  stand: ->
+    console.log @.models[0].flip()
 
+  logic: ->
+    if @scores()[0] == 21 or @scores()[1] == 21
+      if @isDealer
+        @lose()
+      else
+        @win()
+    else if @scores()[0] > 21
+      @bust()
+
+  bust: ->
+    alert 'Reconsider life decisions because you lost'
+    @trigger 'bust', @
+
+  win: ->
+    alert 'You degenerate gambler you, You\'re a winner!11111'
+    @trigger 'win', @
+
+  push: ->
+    alert 'Don\'t you just love a lil pushin'
+    @trigger 'push', @
+
+  dealerLogic: ->
+    if @scores < 17
+      console.log 'what is the average velocity of an unladden swallow'

@@ -1,0 +1,5 @@
+after deal reach 21 from hitting
+  check if dealer has 21 as well before win
+
+dealer checks for 21 if shown card is 10+
+  automatic lose
