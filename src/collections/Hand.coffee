@@ -2,7 +2,6 @@ class window.Hand extends Backbone.Collection
   model: Card
 
   initialize: (array, @deck, @isDealer) ->
-    @logic()
 
   hit: ->
     @add(@deck.pop())
@@ -23,9 +22,11 @@ class window.Hand extends Backbone.Collection
     [@minScore(), @minScore() + 10 * @hasAce()]
 
   stand: ->
-    console.log @.models[0].flip()
+    @.models[0].flip()
+    @dealerLogic()
 
   logic: ->
+
     if @scores()[0] == 21 or @scores()[1] == 21
       if @isDealer
         @lose()
@@ -47,5 +48,12 @@ class window.Hand extends Backbone.Collection
     @trigger 'push', @
 
   dealerLogic: ->
-    if @scores < 17
-      console.log 'what is the average velocity of an unladden swallow'
+    if @scores() < 17
+      @hit()
+      @dealerLogic()
+    else
+      trigger 'compare', @
+
+  lose: ->
+    alert 'Did you really think you could ever win?'
+    @trigger 'lose',@
