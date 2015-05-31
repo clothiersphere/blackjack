@@ -21,19 +21,16 @@ class window.Hand extends Backbone.Collection
     # when there is an ace, it offers you two scores - the original score, and score + 10.
     [@minScore(), @minScore() + 10 * @hasAce()]
 
-  stand: ->
-    @.models[0].flip()
-    @dealerLogic()
-
   logic: ->
-
-    if @scores()[0] == 21 or @scores()[1] == 21
-      if @isDealer
-        @lose()
-      else
-        @win()
-    else if @scores()[0] > 21
+    if !@isDealer and @scores()[0] > 21
       @bust()
+    # if @scores()[0] == 21 or @scores()[1] == 21
+    #   if @isDealer
+    #     @lose()
+    #   else
+    #     @win()
+    # else if !@isDealer and @scores()[0] > 21
+    #   @bust()
 
   bust: ->
     alert 'Reconsider life decisions because you lost'
@@ -47,13 +44,19 @@ class window.Hand extends Backbone.Collection
     alert 'Don\'t you just love a lil pushin'
     @trigger 'push', @
 
+  stand: ->
+    @.models[0].flip()
+    @dealerLogic()
+
   dealerLogic: ->
-    if @scores() < 17
+    if @scores()[0] < 17 || @scores()[1]< 17
       @hit()
       @dealerLogic()
     else
-      trigger 'compare', @
+      @trigger 'compare', @
+
 
   lose: ->
+    console.log 'got here in lose'
     alert 'Did you really think you could ever win?'
-    @trigger 'lose',@
+    @trigger 'lose', @
